@@ -50,6 +50,22 @@ namespace OpenGameListWebApp
 
             app.UseApplicationInsightsExceptionTelemetry();
 
+            // Configure a rewrite rule to auto-lookup for standard default files such as index.html.app.UseDefaultFiles();
+            // Serve static files (html, css, js, images & more). See also the following URL:
+            // https://docs.asp.net/en/latest/fundamentals/static-files.html forfurther reference.
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = (context) =>
+                {
+                    // Disable caching for all static files.
+                    context.Context.Response.Headers["Cache-Control"] = "no-cache, nostore";
+                    context.Context.Response.Headers["Pragma"] = "no-cache";
+                    context.Context.Response.Headers["Expires"] = "-1";
+                }
+            });
+
+            // Add MVC to the pipeline
             app.UseMvc();
         }
     }
